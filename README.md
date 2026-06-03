@@ -1,31 +1,37 @@
-# doggocpp — DNS Client (C++ port of doggo)
+# doggocpp — Raw DNS Client (C++ port of doggo)
 
-A zero-dependency C++ port of [doggo](https://github.com/mrkny/doggo) — a modern DNS client with colorful output and support for DNS-over-HTTPS (DoH) and DNS-over-TLS (DoT).
+A zero-dependency C++ port of [doggo](https://github.com/mrkny/doggo) — a DNS client that constructs raw DNS packets over UDP. No libcurl, no external DNS libraries.
 
 ## Why doggocpp?
 
-The original [doggo](https://github.com/mrkny/doggo) requires the Go toolchain plus dozens of modules. doggocpp compiles with a single `make` using only C++17 and standard Linux headers.
+The original [doggo](https://github.com/mrkny/doggo) requires Go plus dozens of modules. doggocpp compiles with a single `make` using only C++17 and standard POSIX sockets.
 
 ## Quick Start
 
 ```bash
 make
 ./doggocpp example.com
+./doggocpp -t MX example.com
+./doggocpp -n 1.1.1.1 example.com
+./doggocpp -J example.com      # JSON output
 ```
 
 ## Features
 
-- Query A, AAAA, MX, NS, TXT, CNAME, SOA, and more record types
-- DNS-over-HTTPS (DoH) and DNS-over-TLS (DoT) support
-- Custom DNS resolver specification
-- Colored, human-readable output
-- JSON output for scripting
-- Short answers mode
-- Reverse DNS lookups
+- Raw DNS packet construction over UDP (no external DNS library)
+- Supported record types: A, AAAA, NS, CNAME, SOA, MX, TXT
+- Custom DNS server (`-n`)
+- JSON output (`-J`)
+- Plain-text output for non-TTY environments (`--no-color`)
+- Colored table output with name, type, TTL, and value columns
+
+## Note
+
+This does **not** support DNS-over-HTTPS (DoH) or DNS-over-TLS (DoT). It sends raw UDP packets to port 53 — a pure DNS client, not an HTTP-based one.
 
 ## Build
 
 ```bash
 make
 ```
-Requires: GCC 10+ or Clang 12+, GNU Make, libcurl
+Requires: GCC 10+ or Clang 12+, GNU Make (no external libraries)
